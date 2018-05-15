@@ -1,0 +1,18 @@
+{
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vecmezoni/gitbook-plugin-plantuml-renderer.git"
+  },
+  "author": "Alexander Inozemtsev <alexander.inozemtsev@gmail.com>",
+  "dependencies": {
+    "plantuml-encoder": "^1.2.5"
+  },
+  "description": "UML Diagrams rendering using PlantUML.com",
+  "engines": {
+    "gitbook": ">=2.0.0"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "name": "gitbook-plugin-plantuml-renderer",
+  "version": "1.0.0"
+}

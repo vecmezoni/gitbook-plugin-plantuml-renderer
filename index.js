@@ -20,8 +20,9 @@ module.exports = {
                         .replace(/&gt;/g, `>`)
                         .replace(/&lt;/g, `<`)
                 );
-                const name = encoded.slice(0, 16);
-                const path = `/plantuml/${name}.${format}`;
+                const hash = encoded.slice(0, 16);
+                const name = block.kwargs.name || hash;
+                const path = `/plantuml/${hash}.${format}`;
                 const href = `http://www.plantuml.com/plantuml/${format}/${encoded}`;
 
                 return new Promise((resolve, reject) => {
@@ -40,7 +41,7 @@ module.exports = {
                 }).then(body => {
                     return this.output.writeFile(path, body);
                 }).then(() => {
-                    return `<img src="${path}"/>`;
+                    return `<img src="${path}" class="platuml-diagram" id="platuml-${name}"/>`;
                 });
             }
         }

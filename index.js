@@ -14,6 +14,8 @@ module.exports = {
                     .replace(/\\\]/g, `]`)
                     .replace(/\\\(/g, `(`)
                     .replace(/\\\)/g, `)`)
+                    .replace(/\\\#/g, `#`)
+                    .replace(/\\\_/g, `_`)
                     .replace(/&gt;/g, `>`)
                     .replace(/&lt;/g, `<`);
 

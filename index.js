@@ -1,7 +1,5 @@
-const plantumlEncoder = require('plantuml-encoder');
-const http = require('http')
-
-const contentTypes = ['image/png', 'image/svg+xml']
+const plantuml = require('node-plantuml');
+const crypto = require('crypto');
 
 module.exports = {
     blocks: {
@@ -10,34 +8,30 @@ module.exports = {
                 const defaultFormat = this.generator === 'ebook'? 'png' : 'svg';
                 const format = block.kwargs.format || defaultFormat;
 
-                const encoded = plantumlEncoder.encode(
-                    block.body
-                        .replace(/\\\//g, `/`)
-                        .replace(/\\\[/g, `[`)
-                        .replace(/\\\]/g, `]`)
-                        .replace(/\\\(/g, `(`)
-                        .replace(/\\\)/g, `)`)
-                        .replace(/&gt;/g, `>`)
-                        .replace(/&lt;/g, `<`)
-                );
-                const hash = encoded.slice(0, 16);
+                const input = block.body
+                    .replace(/\\\//g, `/`)
+                    .replace(/\\\[/g, `[`)
+                    .replace(/\\\]/g, `]`)
+                    .replace(/\\\(/g, `(`)
+                    .replace(/\\\)/g, `)`)
+                    .replace(/\\\#/g, `#`)
+                    .replace(/\\\_/g, `_`)
+                    .replace(/&gt;/g, `>`)
+                    .replace(/&lt;/g, `<`);
+
+                const hash = crypto.createHash('md5').update(input).digest('hex');
                 const name = block.kwargs.name || hash;
                 const path = `/plantuml/${hash}.${format}`;
-                const href = `http://www.plantuml.com/plantuml/${format}/${encoded}`;
 
                 return new Promise((resolve, reject) => {
-                    const request = http.get(href, (response) => {
-                        const body = [];
-                        response.on('data', (chunk) => body.push(chunk));
-                        response.on('end', () => {
-                            if (!contentTypes.includes(response.headers['content-type'])) {
-                                reject(new Error(`Failed to load picture "${href}", response code: ${response.statusCode}`));
-                            }
+                    plantuml.generate(input, {format: format}, (error, result) => {
+                        if (error) {
+                            reject(error);
+                            return
+                        }
 
-                            resolve(body.join(''))
-                        });
+                        resolve(result);
                     });
-                    request.on('error', (err) => reject(err));
                 }).then(body => {
                     return this.output.writeFile(path, body);
                 }).then(() => {

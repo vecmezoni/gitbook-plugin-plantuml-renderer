@@ -5,14 +5,14 @@
   },
   "author": "Alexander Inozemtsev <alexander.inozemtsev@gmail.com>",
   "dependencies": {
-    "plantuml-encoder": "^1.2.5"
+    "node-plantuml": "^0.7.0"
   },
-  "description": "UML Diagrams rendering using PlantUML.com",
+  "description": "UML Diagrams rendering using PlantUML",
   "engines": {
     "gitbook": ">=2.0.0"
   },
   "license": "MIT",
   "main": "index.js",
   "name": "gitbook-plugin-plantuml-renderer",
-  "version": "1.2.0"
+  "version": "2.0.1"
 }

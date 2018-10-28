@@ -1,5 +1,14 @@
 const plantuml = require('node-plantuml');
+const escape = require('escape-html');
 const crypto = require('crypto');
+
+function flattenAttributes(attributes) {
+    return Object.keys(attributes).filter(key => {
+        return !['format', 'name'].includes(key);
+    }).reduce((result, key) => {
+        return `${result} ${escape(key)}="${escape(attributes[key])}"`;
+    }, '');
+}
 
 module.exports = {
     blocks: {
@@ -35,7 +44,12 @@ module.exports = {
                 }).then(body => {
                     return this.output.writeFile(path, body);
                 }).then(() => {
-                    return `<img src="${path}" class="platuml-diagram" id="platuml-${name}"/>`;
+                    const attributes = Object.assign({}, kwargs, {
+                        src: path,
+                        class: 'platuml-diagram' + kwargs.class ? ' ' + kwargs.class : '',
+                        id: `platuml-${name}`
+                    })
+                    return `<img${flattenAttributes(attributes)}/>`;
                 });
             }
         }

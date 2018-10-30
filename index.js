@@ -44,9 +44,9 @@ module.exports = {
                 }).then(body => {
                     return this.output.writeFile(path, body);
                 }).then(() => {
-                    const attributes = Object.assign({}, kwargs, {
+                    const attributes = Object.assign({}, block.kwargs, {
                         src: path,
-                        class: 'platuml-diagram' + kwargs.class ? ' ' + kwargs.class : '',
+                        class: 'platuml-diagram' + block.kwargs.class ? ' ' + block.kwargs.class : '',
                         id: `platuml-${name}`
                     })
                     return `<img${flattenAttributes(attributes)}/>`;
